@@ -1,191 +1,217 @@
-AWS School Management System — Terraform
+<div align="center">
 
-A cloud-hosted School Management System webpage deployed on AWS using Terraform Infrastructure as Code (IaC).
+# 🏫 AWS School Management System
 
-Project Overview
+### Deployed with Terraform · Hosted on EC2 · Served by Nginx
 
-This project demonstrates how to provision AWS infrastructure and deploy a static website on an EC2 instance using Terraform.
+*A cloud-hosted School Management System webpage, provisioned end-to-end using Infrastructure as Code.*
 
-The website is stored in a private Amazon S3 bucket and downloaded automatically by the EC2 instance during initialization.
+**`🟣 Terraform`** **`☁️ AWS`** **`🖥️ EC2`** **`🪣 S3`** **`🌍 Nginx`** **`🐧 Amazon Linux 2023`**
 
-Architecture
+[Overview](#-overview) •
+[Architecture](#-architecture) •
+[AWS Services](#-aws-services-used) •
+[Getting Started](#-getting-started) •
+[Security](#-security-configuration) •
+[Author](#-author)
 
-                  Internet
-                      |
-               Internet Gateway
-                      |
-                  AWS VPC
-                 10.0.0.0/16
-                      |
-              Public Subnets
-               /          \
-          Subnet 1       Subnet 2
-          10.0.1.0/24    10.0.2.0/24
-               |
-           EC2 Instance
-           Amazon Linux 2023
-               |
-             Nginx
-               |
-       School Management Website
-               |
-          Private S3 Bucket
-          School.html
+</div>
 
-AWS Services Used
+---
 
-Service
+## 📖 Overview
 
-Purpose
+This project shows how to **provision AWS infrastructure and deploy a static website on an EC2 instance using Terraform**.
 
-Amazon VPC
+The website file (`School.html`) is kept in a **private Amazon S3 bucket**. When the EC2 instance starts, it **downloads the file automatically** and serves it through **Nginx**, with no manual setup and no stored access keys.
 
-Isolated cloud network
+> 💡 One command (`terraform apply`) builds the network, the server, the permissions and the website.
 
-Public Subnets
+### ✨ Highlights
 
-Network placement for resources
+- 🧱 **Fully automated** infrastructure with Terraform
+- 🔒 **Private S3 bucket** with public access blocked
+- 🔑 **IAM role**, not hard-coded credentials
+- 🌐 **Custom VPC** with two public subnets
+- 🚀 **Auto-deployed website** on first boot
+- 🛡️ **Least-privilege** access: EC2 can only read the website object
 
-Internet Gateway
+---
 
-Internet connectivity
+## 🏗️ Architecture
 
-Route Table
+<div align="center">
 
-Routes internet-bound traffic
+![AWS Architecture](assets/architecture.svg)
 
-Security Group
+</div>
 
-Controls inbound and outbound traffic
+<details>
+<summary>📟 Plain-text version</summary>
 
-Amazon EC2
+```
+              Internet
+                  |
+           Internet Gateway
+                  |
+              AWS VPC
+             10.0.0.0/16
+                  |
+          Public Subnets
+           /          \
+      Subnet 1       Subnet 2
+      10.0.1.0/24    10.0.2.0/24
+           |
+       EC2 Instance
+       Amazon Linux 2023
+           |
+         Nginx
+           |
+   School Management Website
+           |
+      Private S3 Bucket
+      School.html
+```
 
-Hosts the website
+</details>
 
-Amazon S3
+---
 
-Stores the website HTML file
+## ☁️ AWS Services Used
 
-AWS IAM Role
+| Service | Purpose |
+|:--|:--|
+| 🌐 **Amazon VPC** | Isolated cloud network |
+| 🧩 **Public Subnets** | Network placement for resources |
+| 🚪 **Internet Gateway** | Internet connectivity |
+| 🗺️ **Route Table** | Routes internet-bound traffic |
+| 🛡️ **Security Group** | Controls inbound and outbound traffic |
+| 🖥️ **Amazon EC2** | Hosts the website |
+| 🪣 **Amazon S3** | Stores the website HTML file |
+| 👤 **AWS IAM Role** | Grants EC2 permission to access S3 |
+| 🪪 **IAM Instance Profile** | Attaches the IAM role to EC2 |
+| 🟣 **Terraform** | Provisions everything as code |
 
-Grants EC2 permission to access S3
+---
 
-IAM Instance Profile
+## 📁 Project Structure
 
-Attaches the IAM role to EC2
-
-Terraform
-
-Provisions infrastructure as code
-
-Technologies
-
-Terraform
-
-AWS
-
-Amazon Linux 2023
-
-Nginx
-
-Amazon S3
-
-AWS IAM
-
-Git and GitHub
-
-Project Structure
-
+```
 terraform-school-management-system/
 │
-├── main.tf
-├── School.html
-├── .gitignore
-└── .terraform.lock.hcl
+├── 📄 main.tf                 # All AWS infrastructure definitions
+├── 🌐 School.html             # The School Management website
+├── 🔐 .terraform.lock.hcl     # Provider version lock
+├── 🙈 .gitignore              # Keeps state files & secrets out of Git
+└── 📘 README.md               # You are here
+```
 
-Deployment
+---
 
-Prerequisites
+## 🚀 Getting Started
 
-AWS account
+### ✅ Prerequisites
 
-AWS CLI configured with appropriate credentials
+- [ ] ☁️ An **AWS account**
+- [ ] 🔧 **AWS CLI** configured with valid credentials
+- [ ] 🟣 **Terraform** installed
+- [ ] 🔀 **Git** installed
+- [ ] 🐙 **GitHub CLI** installed
 
-Terraform installed
+### 📦 Deployment
 
-Git installed
+**1️⃣ Clone the repository**
 
-GitHub CLI installed
-
-1. Clone the repository
-
+```bash
 git clone https://github.com/talha-zahoor-isra/terraform-school-management-system.git
 cd terraform-school-management-system
+```
 
-2. Initialize Terraform
+**2️⃣ Initialize Terraform**
 
+```bash
 terraform init
+```
 
-3. Validate configuration
+**3️⃣ Validate the configuration**
 
+```bash
 terraform validate
+```
 
-4. Review infrastructure changes
+**4️⃣ Review the planned changes**
 
+```bash
 terraform plan
+```
 
-5. Deploy infrastructure
+**5️⃣ Deploy the infrastructure**
 
+```bash
 terraform apply
+```
 
-Review the plan and enter yes when prompted.
+> Review the plan, then type `yes` when prompted.
 
-Website Access
+### 🌍 Accessing the Website
 
-After deployment, locate the EC2 instance's public IPv4 address in the AWS Console.
+After deployment finishes:
 
-Open the following URL in your browser:
+1. Open the **AWS Console** and find your EC2 instance's **public IPv4 address**.
+2. Visit it in your browser:
 
+```
 http://YOUR-EC2-PUBLIC-IP
+```
 
-Security Configuration
+### 🧹 Cleaning Up
 
-HTTP access is allowed on port 80.
+To avoid AWS charges when you're done:
 
-SSH access on port 22 is restricted to a specified public IP address.
+```bash
+terraform destroy
+```
 
-The S3 bucket blocks public access.
+---
 
-EC2 uses an IAM role instead of storing AWS access keys on the instance.
+## 🔐 Security Configuration
 
-IAM permissions are restricted to reading the website object from S3.
+| | Measure |
+|:-:|:--|
+| 🌐 | **HTTP** is allowed on **port 80** |
+| 🔑 | **SSH** on **port 22** is restricted to a specified public IP address |
+| 🪣 | The **S3 bucket blocks all public access** |
+| 👤 | EC2 uses an **IAM role** instead of stored AWS access keys |
+| 🎯 | IAM permissions are limited to **reading the website object from S3** |
+| 🙈 | Terraform state files and private credentials are **excluded from Git** |
 
-Terraform state files and private credentials are excluded from Git.
+> ⚠️ **Note:** If your public IP address changes, update the SSH security group CIDR in `main.tf`.
 
-Note: Update the SSH security group CIDR if your public IP address changes.
+---
 
-Learning Outcomes
+## 🎓 Learning Outcomes
 
-Through this project, I gained practical experience with:
+Through this project I gained hands-on experience with:
 
-AWS networking and VPC configuration.
+- 🌐 AWS networking and VPC configuration
+- 🧱 Terraform resource provisioning and dependency management
+- 🖥️ EC2 instance deployment and initialization
+- 🔐 IAM roles and least-privilege permissions
+- 🪣 Private S3 object access
+- 🌍 Nginx web server configuration
+- 🔀 Git and GitHub version control
 
-Terraform resource provisioning and dependency management.
+---
 
-EC2 instance deployment and initialization.
+## 👨‍💻 Author
 
-IAM roles and least-privilege permissions.
+<div align="center">
 
-Private S3 object access.
+**Talha Zahoor**
 
-Nginx web server configuration.
+🐙 [GitHub: talha-zahoor-isra](https://github.com/talha-zahoor-isra)  
+📦 [Repository: terraform-school-management-system](https://github.com/talha-zahoor-isra/terraform-school-management-system)
 
-Git and GitHub version control.
+⭐ *If you found this project helpful, consider giving it a star!* ⭐
 
-Author
-
-Talha Zahoor
-
-GitHub: https://github.com/talha-zahoor-isra
-
-Project Repository: https://github.com/talha-zahoor-isra/terraform-school-management-system
+</div>
